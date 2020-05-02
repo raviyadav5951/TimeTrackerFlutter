@@ -19,6 +19,7 @@ class SignInPage extends StatelessWidget {
       final User user = await authBase.signInAnonymously();
       print(user.uid);
       onSignIn(user);
+      return user;
     } catch (e) {
       print('exception==${e.toString()}');
     }
