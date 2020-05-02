@@ -19,7 +19,7 @@ class CustomRaisedButton extends StatelessWidget {
     return SizedBox(
       height: buttonHeight,
       child: RaisedButton(
-        onPressed: () {},
+        onPressed: this.onPressed,
         child: this.child,
         color: this.color,
         shape: RoundedRectangleBorder(

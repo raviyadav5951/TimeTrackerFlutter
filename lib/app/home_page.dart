@@ -29,7 +29,7 @@ class HomePage extends StatelessWidget {
                 'Logout',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 10.0,
+                  fontSize: 12.0,
                 ),
               ))
         ],
