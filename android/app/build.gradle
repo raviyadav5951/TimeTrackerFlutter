@@ -15,7 +15,7 @@ def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
     flutterVersionCode = '1'
 }
- 
+
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
@@ -37,7 +37,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.askfortricks.time_tracker"
+        applicationId "com.askfortricks.timetracker"
         minSdkVersion 16
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
