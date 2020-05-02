@@ -1,9 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:time_tracker/app/sign_in/sign_in_button.dart';
 import 'package:time_tracker/app/sign_in/social_sign_in_button.dart';
 import 'package:time_tracker/constants.dart';
+import 'package:time_tracker/services/auth.dart';
 
 class SignInPage extends StatelessWidget {
-  const SignInPage({Key key}) : super(key: key);
+  //constructor that will be called from Landing page
+  SignInPage({@required this.authBase, @required this.onSignIn});
+
+  final AuthBase authBase;
+
+  //this function is callback to let the landing page know that we logged in.
+  final Function(User) onSignIn;
+
+  Future<void> _signInAnonymously() async {
+    try {
+      print("sign in anonymously called");
+      final User user = await authBase.signInAnonymously();
+      print(user.uid);
+      onSignIn(user);
+    } catch (e) {
+      print('exception==${e.toString()}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +73,7 @@ class SignInPage extends StatelessWidget {
           SizedBox(
             height: 8.0,
           ),
-          SocialSignInButton(
-            assetName: '',
+          SignInButton(
             text: 'Sign in with Email',
             bgColor: Color(0xff347164),
             textColor: Colors.white,
@@ -72,12 +90,11 @@ class SignInPage extends StatelessWidget {
           SizedBox(
             height: 8.0,
           ),
-          SocialSignInButton(
-            assetName: '',
+          SignInButton(
             text: 'Go anonymous',
             textColor: Colors.black87,
             bgColor: Color(0xffD7E270),
-            onPressed: () {},
+            onPressed: _signInAnonymously,
           ),
         ],
       ),
