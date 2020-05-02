@@ -6,20 +6,13 @@ import 'package:time_tracker/services/auth.dart';
 
 class SignInPage extends StatelessWidget {
   //constructor that will be called from Landing page
-  SignInPage({@required this.authBase, @required this.onSignIn});
+  SignInPage({@required this.authBase});
 
   final AuthBase authBase;
 
-  //this function is callback to let the landing page know that we logged in.
-  final Function(User) onSignIn;
-
   Future<void> _signInAnonymously() async {
     try {
-      print("sign in anonymously called");
-      final User user = await authBase.signInAnonymously();
-      print(user.uid);
-      onSignIn(user);
-      return user;
+      await authBase.signInAnonymously();
     } catch (e) {
       print('exception==${e.toString()}');
     }
