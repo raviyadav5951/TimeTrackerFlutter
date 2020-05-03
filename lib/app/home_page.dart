@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:time_tracker/services/auth.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({ @required this.authBase});
+  HomePage({@required this.authBase});
 
   final AuthBase authBase;
 
@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
                 'Logout',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 12.0,
+                  fontSize: 18.0,
                 ),
               ))
         ],
