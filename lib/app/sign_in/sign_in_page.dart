@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:time_tracker/app/sign_in/email_signin.dart';
 import 'package:time_tracker/app/sign_in/sign_in_button.dart';
 import 'package:time_tracker/app/sign_in/social_sign_in_button.dart';
 import 'package:time_tracker/constants.dart';
 import 'package:time_tracker/services/auth.dart';
-import 'package:time_tracker/services/auth_provider.dart';
 
 class SignInPage extends StatelessWidget {
   Future<void> _signInAnonymously(BuildContext context) async {
     try {
-      final authBase = AuthProvider.of(context);
+      final authBase=Provider.of<AuthBase>(context,listen: false);
       await authBase.signInAnonymously();
     } catch (e) {
       print('exception==${e.toString()}');
@@ -18,7 +18,7 @@ class SignInPage extends StatelessWidget {
 
   Future<void> _signInWithGoogle(BuildContext context) async {
     try {
-      final authBase = AuthProvider.of(context);
+      final authBase=Provider.of<AuthBase>(context,listen: false);
       await authBase.signInWithGoogle();
     } catch (e) {
       print('exception==${e.toString()}');
@@ -27,7 +27,7 @@ class SignInPage extends StatelessWidget {
 
   Future<void> _signInWithFacebook(BuildContext context) async {
     try {
-      final authBase = AuthProvider.of(context);
+      final authBase=Provider.of<AuthBase>(context,listen: false);
       await authBase.signInWithFacebook();
     } catch (e) {
       print('exception==${e.toString()}');
@@ -36,7 +36,7 @@ class SignInPage extends StatelessWidget {
 
   void _signInWithEmail(BuildContext context) async {
     try {
-      final authBase = AuthProvider.of(context);
+      final authBase=Provider.of<AuthBase>(context,listen: false);
       Navigator.push(
         context,
         MaterialPageRoute<void>(
