@@ -46,7 +46,7 @@ class PlatformAlertDialog extends PlatformWidget {
 
   List<Widget> _buildActions(BuildContext context) {
     List<Widget> actions = <Widget>[];
-    if (cancelActionText.isNotEmpty) {
+    if (cancelActionText!=null) {
       actions.add(
         PlatformAlertDialogAction(
             onPressed: () => Navigator.pop(context,false),

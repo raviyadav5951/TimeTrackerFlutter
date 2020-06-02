@@ -1,42 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker/app/sign_in/email_signin.dart';
 import 'package:time_tracker/app/sign_in/sign_in_button.dart';
 import 'package:time_tracker/app/sign_in/social_sign_in_button.dart';
+import 'package:time_tracker/common_widgets/platform_exception_alert.dart';
 import 'package:time_tracker/constants.dart';
 import 'package:time_tracker/services/auth.dart';
 
 class SignInPage extends StatelessWidget {
+  void _showSignInError(BuildContext context, PlatformException exception) {
+    PlatformExceptionAlertDialog(title: 'Sign in Failed', exception: exception)
+        .show(context);
+  }
+
   Future<void> _signInAnonymously(BuildContext context) async {
     try {
-      final authBase=Provider.of<AuthBase>(context,listen: false);
+      final authBase = Provider.of<AuthBase>(context, listen: false);
       await authBase.signInAnonymously();
-    } catch (e) {
-      print('exception==${e.toString()}');
+    } on PlatformException catch (e) {
+      _showSignInError(context,e);
     }
   }
 
   Future<void> _signInWithGoogle(BuildContext context) async {
     try {
-      final authBase=Provider.of<AuthBase>(context,listen: false);
+      final authBase = Provider.of<AuthBase>(context, listen: false);
       await authBase.signInWithGoogle();
-    } catch (e) {
-      print('exception==${e.toString()}');
+    } on PlatformException catch (e) {
+      if(e.code != 'ERROR ABORTED BY USER')
+      _showSignInError(context,e);
     }
   }
 
   Future<void> _signInWithFacebook(BuildContext context) async {
     try {
-      final authBase=Provider.of<AuthBase>(context,listen: false);
+      final authBase = Provider.of<AuthBase>(context, listen: false);
       await authBase.signInWithFacebook();
-    } catch (e) {
-      print('exception==${e.toString()}');
+    } on PlatformException catch (e) {
+      if(e.code != 'ERROR ABORTED BY USER')
+        _showSignInError(context,e);
+    }
     }
   }
 
   void _signInWithEmail(BuildContext context) async {
     try {
-      final authBase=Provider.of<AuthBase>(context,listen: false);
+      final authBase = Provider.of<AuthBase>(context, listen: false);
       Navigator.push(
         context,
         MaterialPageRoute<void>(
@@ -44,8 +54,8 @@ class SignInPage extends StatelessWidget {
           builder: (context) => EmailSignInPage(),
         ),
       );
-    } catch (e) {
-      print('exception==${e.toString()}');
+    } on PlatformException catch (e) {
+      _showSignInError(context,e);
     }
   }
 
