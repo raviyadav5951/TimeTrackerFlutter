@@ -35,7 +35,7 @@ class Auth implements AuthBase {
     return User(uid: user.uid);
   }
 
-  //this method will be used as a Stram map which we wil use later in sigin and signout function.
+  //this method will be used as a Stream map which we wil use later in sigin and signout function.
   @override
   Stream<User> get onAuthStateChanged {
     return _firebaseAuth.onAuthStateChanged.map(_userFromFirebase);
