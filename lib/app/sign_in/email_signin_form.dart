@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker/app/sign_in/validators.dart';
 import 'package:time_tracker/common_widgets/form_submit_button.dart';
 import 'package:time_tracker/common_widgets/platform_alert_dialog.dart';
+import 'package:time_tracker/common_widgets/platform_exception_alert.dart';
 import 'package:time_tracker/services/auth.dart';
 
 enum EmailSiginFormType { signin, register }
@@ -32,6 +34,16 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
 
   EmailSiginFormType _formType = EmailSiginFormType.signin;
 
+
+  @override
+  void dispose() {
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   void _emailEditingComplete() {
     final newFocusNode = widget.emailValidator.isValidEmail(_email)
         ? _passwordFocusNode
@@ -45,7 +57,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         _submitted = true;
         _isLoading = true;
       });
-      final authBase=Provider.of<AuthBase>(context,listen: false);
+      final authBase = Provider.of<AuthBase>(context, listen: false);
       switch (_formType) {
         case EmailSiginFormType.signin:
           await authBase.signInWithEmailAndPassword(_email, _password);
@@ -56,11 +68,10 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       }
       //dismiss current screen
       Navigator.pop(context);
-    } catch (e) {
-      PlatformAlertDialog(
+    } on PlatformException catch (e) {
+      PlatformExceptionAlertDialog(
         title: 'Sign in Failed',
-        content: e.toString(),
-        defaultActionText: 'Ok',
+        exception: e,
       ).show(context);
     } finally {
       setState(() {
