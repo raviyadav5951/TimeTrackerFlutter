@@ -34,6 +34,16 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
 
   EmailSiginFormType _formType = EmailSiginFormType.signin;
 
+
+  @override
+  void dispose() {
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   void _emailEditingComplete() {
     final newFocusNode = widget.emailValidator.isValidEmail(_email)
         ? _passwordFocusNode
