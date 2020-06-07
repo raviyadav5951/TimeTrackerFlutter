@@ -16,8 +16,11 @@ class SignInPage extends StatelessWidget {
 
   //We will use this static method to create SignInPage.
   static Widget create(BuildContext context) {
+
+    final auth =Provider.of<AuthBase>(context,listen: false);
+
     return Provider<SignInBloc>(
-      create: (_) => SignInBloc(),
+      create: (_) => SignInBloc(auth: auth),
       dispose: (context, bloc) => bloc.dispose(),
       child: Consumer<SignInBloc>(
         builder: (context, bloc, _) => SignInPage(
@@ -124,48 +127,30 @@ class SignInPage extends StatelessWidget {
 
   Future<void> _signInAnonymously(BuildContext context) async {
     try {
-      //setState(() => _isLoading = true);
-      bloc.setIsLoading(true);
-
-      final authBase = Provider.of<AuthBase>(context, listen: false);
-      await authBase.signInAnonymously();
+      await bloc.signInAnonymously();
     } on PlatformException catch (e) {
       _showSignInError(context, e);
-    } finally {
-      bloc.setIsLoading(false);
     }
   }
 
   Future<void> _signInWithGoogle(BuildContext context) async {
     try {
-      //setState(() => _isLoading = true);
-      bloc.setIsLoading(true);
-      final authBase = Provider.of<AuthBase>(context, listen: false);
-      await authBase.signInWithGoogle();
+      await bloc.signInWithGoogle();
     } on PlatformException catch (e) {
       if (e.code != 'ERROR ABORTED BY USER') _showSignInError(context, e);
-    } finally {
-      bloc.setIsLoading(false);
     }
   }
 
   Future<void> _signInWithFacebook(BuildContext context) async {
     try {
-      //setState(() => _isLoading = true);
-      bloc.setIsLoading(true);
-      final authBase = Provider.of<AuthBase>(context, listen: false);
-      await authBase.signInWithFacebook();
+      await bloc.signInWithFacebook();
     } on PlatformException catch (e) {
       if (e.code != 'ERROR ABORTED BY USER') _showSignInError(context, e);
-    } finally {
-      bloc.setIsLoading(false);
     }
   }
 
   void _signInWithEmail(BuildContext context) async {
     try {
-      //setState(() => _isLoading = true);
-      bloc.setIsLoading(true);
       Navigator.push(
         context,
         MaterialPageRoute<void>(
@@ -175,8 +160,6 @@ class SignInPage extends StatelessWidget {
       );
     } on PlatformException catch (e) {
       _showSignInError(context, e);
-    } finally {
-      bloc.setIsLoading(false);
     }
   }
 }
