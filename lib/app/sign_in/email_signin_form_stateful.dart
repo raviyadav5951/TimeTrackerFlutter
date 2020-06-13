@@ -1,22 +1,27 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:time_tracker/app/sign_in/email_sign_in_bloc.dart';
 import 'package:time_tracker/app/sign_in/validators.dart';
 import 'package:time_tracker/common_widgets/form_submit_button.dart';
 import 'package:time_tracker/common_widgets/platform_alert_dialog.dart';
 import 'package:time_tracker/common_widgets/platform_exception_alert.dart';
 import 'package:time_tracker/services/auth.dart';
 
-enum EmailSiginFormType { signin, register }
+import 'email_sign_in_model.dart';
 
-class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidators {
+class EmailSignInFormStateful extends StatefulWidget
+    with EmailAndPasswordValidators {
+
   @override
-  _EmailSignInFormState createState() => _EmailSignInFormState();
+  _EmailSignInFormStatefulState createState() =>
+      _EmailSignInFormStatefulState();
 }
 
-class _EmailSignInFormState extends State<EmailSignInForm> {
+class _EmailSignInFormStatefulState extends State<EmailSignInFormStateful> {
   //textediting controller for input fields like email and password.
 
   final TextEditingController _emailController = TextEditingController();
@@ -32,8 +37,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
 
   String get _password => _passwordController.text;
 
-  EmailSiginFormType _formType = EmailSiginFormType.signin;
-
+  EmailSignInFormType _formType = EmailSignInFormType.signin;
 
   @override
   void dispose() {
@@ -51,7 +55,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     FocusScope.of(context).requestFocus(newFocusNode);
   }
 
-  void _submit() async {
+  Future<void> _submit() async {
     try {
       setState(() {
         _submitted = true;
@@ -59,10 +63,10 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       });
       final authBase = Provider.of<AuthBase>(context, listen: false);
       switch (_formType) {
-        case EmailSiginFormType.signin:
+        case EmailSignInFormType.signin:
           await authBase.signInWithEmailAndPassword(_email, _password);
           break;
-        case EmailSiginFormType.register:
+        case EmailSignInFormType.register:
           await authBase.createAccountWithEmailAndPassword(_email, _password);
           break;
       }
@@ -83,9 +87,9 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   void _toggleFormType() {
     setState(() {
       _submitted = false;
-      _formType = _formType == EmailSiginFormType.signin
-          ? EmailSiginFormType.register
-          : EmailSiginFormType.signin;
+      _formType = _formType == EmailSignInFormType.signin
+          ? EmailSignInFormType.register
+          : EmailSignInFormType.signin;
     });
     _emailController.clear();
     _passwordController.clear();
@@ -108,10 +112,10 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         widget.passwordValidator.isValid(_password) &&
         !_isLoading;
 
-    final primaryText = _formType == EmailSiginFormType.signin
+    final primaryText = _formType == EmailSignInFormType.signin
         ? 'Sign-in'
         : 'Create an account';
-    final secondaryText = _formType == EmailSiginFormType.signin
+    final secondaryText = _formType == EmailSignInFormType.signin
         ? 'Need an account? Register.'
         : 'Have an account? Sign-in';
 
