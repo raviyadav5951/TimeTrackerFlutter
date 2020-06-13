@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:time_tracker/app/sign_in/email_signin.dart';
 import 'package:time_tracker/app/sign_in/sign_in_bloc.dart';
 import 'package:time_tracker/app/sign_in/sign_in_button.dart';
@@ -11,21 +12,28 @@ import 'package:time_tracker/services/auth.dart';
 
 class SignInPage extends StatelessWidget {
   final SignInBloc bloc;
+  final bool isLoading;
 
-  const SignInPage({Key key, @required this.bloc}) : super(key: key);
+  const SignInPage({Key key, @required this.bloc,@required this.isLoading}) : super(key: key);
 
   //We will use this static method to create SignInPage.
   static Widget create(BuildContext context) {
+    final auth = Provider.of<AuthBase>(context, listen: false);
 
-    final auth =Provider.of<AuthBase>(context,listen: false);
-
-    return Provider<SignInBloc>(
-      create: (_) => SignInBloc(auth: auth),
-      dispose: (context, bloc) => bloc.dispose(),
-      child: Consumer<SignInBloc>(
-        builder: (context, bloc, _) => SignInPage(
-          bloc: bloc,
-        ),
+    return ChangeNotifierProvider<ValueNotifier<bool>>(
+      create: (_) => ValueNotifier<bool>(false),
+      child: Consumer<ValueNotifier<bool>>(
+        builder: (_, isLoading, __) =>
+            Provider<SignInBloc>(
+              create: (_) => SignInBloc(auth: auth, isLoading: isLoading),
+              child: Consumer<SignInBloc>(
+                builder: (context, bloc, _) =>
+                    SignInPage(
+                      bloc: bloc,
+                      isLoading: isLoading.value,
+                    ),
+              ),
+            ),
       ),
     );
   }
@@ -33,28 +41,23 @@ class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Time Tracker'),
-        elevation: 10.0,
-      ),
-      backgroundColor: Colors.grey[200],
-      body: StreamBuilder<bool>(
-          stream: bloc.isLoadingStream,
-          initialData: false,
-          builder: (context, snapshot) {
-            return _buildContent(context, snapshot.data);
-          }),
+        appBar: AppBar(
+          title: Text('Time Tracker'),
+          elevation: 10.0,
+        ),
+        backgroundColor: Colors.grey[200],
+        body: _buildContent(context),
     );
   }
 
-  Widget _buildContent(BuildContext context, bool isLoading) {
+  Widget _buildContent(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          SizedBox(height: 50.0, child: _buildProgressIndicator(isLoading)),
+          SizedBox(height: 50.0, child: _buildProgressIndicator()),
           SizedBox(
             height: 48.0,
           ),
@@ -106,7 +109,7 @@ class SignInPage extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressIndicator(bool isLoading) {
+  Widget _buildProgressIndicator() {
     if (isLoading) {
       return Center(
         child: CircularProgressIndicator(),
