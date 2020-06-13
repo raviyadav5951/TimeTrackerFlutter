@@ -98,16 +98,6 @@ class _EmailSignInFormBlocBasedState extends State<EmailSignInFormBlocBased> {
   }
 
   List<Widget> _buildChildren(EmailSignInModel model) {
-    final primaryText = model.formType == EmailSignInFormType.signin
-        ? 'Sign-in'
-        : 'Create an account';
-    final secondaryText = model.formType == EmailSignInFormType.signin
-        ? 'Need an account? Register.'
-        : 'Have an account? Sign-in';
-
-    bool _isSubmitEnabled = model.emailValidator.isValidEmail(model.email) &&
-        model.passwordValidator.isValid(model.password) &&
-        !model.isLoading;
     return [
       _buildEmailTextInputField(model),
       SizedBox(
@@ -118,15 +108,15 @@ class _EmailSignInFormBlocBasedState extends State<EmailSignInFormBlocBased> {
         height: 8.0,
       ),
       FormSubmitButton(
-        text: primaryText,
-        onPressed: _isSubmitEnabled ? _submit : null,
+        text: model.primaryButtonText,
+        onPressed: model.canSubmit ? _submit : null,
       ),
       SizedBox(
         height: 8.0,
       ),
       FlatButton(
           onPressed: !model.isLoading ? _toggleFormType : null,
-          child: Text(secondaryText)),
+          child: Text(model.secondaryButtonText)),
     ];
   }
 
